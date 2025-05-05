@@ -1,42 +1,27 @@
 import { Produto as ProdutoType } from '../App'
 import Produto from '../components/Produto'
-
 import * as S from './styles'
 
 type Props = {
   produtos: ProdutoType[]
-  favoritos: ProdutoType[]
-  adicionarAoCarrinho: (produto: ProdutoType) => void
+  favoritos: ProdutoType[] // Certifique-se de incluir 'favoritos' aqui
   favoritar: (produto: ProdutoType) => void
+  adicionarAoCarrinho: (produto: ProdutoType) => void
 }
 
-const ProdutosComponent = ({
-  produtos,
-  favoritos,
-  adicionarAoCarrinho,
-  favoritar
-}: Props) => {
-  const produtoEstaNosFavoritos = (produto: ProdutoType) => {
-    const produtoId = produto.id
-    const IdsDosFavoritos = favoritos.map((f) => f.id)
-
-    return IdsDosFavoritos.includes(produtoId)
-  }
-
+const ProdutosComponent = ({ produtos, favoritos, favoritar, adicionarAoCarrinho }: Props) => {
   return (
-    <>
-      <S.Produtos>
-        {produtos.map((produto) => (
-          <Produto
-            estaNosFavoritos={produtoEstaNosFavoritos(produto)}
-            key={produto.id}
-            produto={produto}
-            favoritar={favoritar}
-            aoComprar={adicionarAoCarrinho}
-          />
-        ))}
-      </S.Produtos>
-    </>
+    <S.Produtos>
+      {produtos.map((produto) => (
+        <Produto
+          key={produto.id}
+          produto={produto}
+          estaNosFavoritos={favoritos.some((f) => f.id === produto.id)} // Verificando se o produto está nos favoritos
+          aoComprar={() => adicionarAoCarrinho(produto)}
+          favoritar={() => favoritar(produto)}
+        />
+      ))}
+    </S.Produtos>
   )
 }
 
